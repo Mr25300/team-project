@@ -52,6 +52,6 @@ By signing below, we acknowledge that we have read, discussed, and agreed to the
 
 Team Member Signatures:
 
+Preston Cai
 Sebastian Cooper-Giannotta
-
 Andrei Berzin
