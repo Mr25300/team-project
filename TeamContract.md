@@ -55,3 +55,4 @@ Team Member Signatures:
 Preston Cai
 Sebastian Cooper-Giannotta
 Andrei Berzin
+Tymofiy Spektor
