@@ -52,6 +52,7 @@ class TripListViewTest {
     void showsErrorMessage() throws Exception {
         publish(List.of(), "Couldn't load trips: boom");
 
+        assertTrue(view.getMessageLabel().isVisible());
         assertEquals("Couldn't load trips: boom", view.getMessageLabel().getText());
     }
 
