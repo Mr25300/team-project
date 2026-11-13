@@ -2,8 +2,6 @@ package archive;
 
 import java.nio.file.Path;
 
-import entity.Photo;
-
 public class ArchiveManager implements ArchiveManagerInterface {
     private static final String FOLDER_NAME = "journeye";
 
