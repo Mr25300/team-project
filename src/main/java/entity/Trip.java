@@ -27,18 +27,35 @@ public class Trip {
     public void addPhoto(Photo photo) {
         LocalDateTime photoTime = photo.getTime();
 
-        if (photoTime.compareTo(startTime) < 0) {
-            startTime = photoTime;
+        if (photoTime != null) {
+            if (startTime == null || photoTime.isBefore(startTime)) startTime = photoTime;
+            if (endTime == null || photoTime.isAfter(endTime)) endTime = photoTime;
         }
-
-        if (photoTime.compareTo(endTime) > 0) {
-            endTime = photoTime;
-        }
-
         photoIds.add(photo.getId());
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public LocalDateTime getStartTime() {
+        return this.startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.endTime;
     }
 
     public Duration getDuration() {
         return Duration.between(startTime, endTime);
     }
+
+    public List<String> getPhotoIds() {
+        return List.copyOf(this.photoIds);
+    }
+
 }

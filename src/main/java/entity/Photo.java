@@ -1,8 +1,11 @@
 package entity;
-
+import java.util.Comparator;
 import java.time.LocalDateTime;
 
 public class Photo implements Comparable<Photo> {
+    private static final Comparator<Photo> BY_TIME =
+        Comparator.comparing(Photo::getTime, Comparator.nullsLast(Comparator.naturalOrder()));
+    
     private String id;
     private Location location;
     private LocalDateTime time;
@@ -25,7 +28,8 @@ public class Photo implements Comparable<Photo> {
         return time;
     }
 
+    @Override
     public int compareTo(Photo other) {
-        return time.compareTo(other.time);
+        return BY_TIME.compare(this, other);
     }
 }

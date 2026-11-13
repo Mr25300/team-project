@@ -45,8 +45,8 @@ public class Location {
             dotProduct += vector1[i] * vector2[i];
         }
 
-        double angle = Math.acos(Math.min(Math.max(dotProduct, 0), 1));
+        double angle = Math.acos(Math.max(-1.0, Math.min(1.0, dotProduct)));
 
-        return 2 * Location.EARTH_RADIUS * angle;
+        return Location.EARTH_RADIUS * angle;
     }
 }
