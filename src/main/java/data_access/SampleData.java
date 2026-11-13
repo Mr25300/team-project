@@ -10,7 +10,7 @@ import entity.LocationInfo;
 import entity.Photo;
 import entity.Trip;
 
-/** Seeds a DAO with demo trips so GUI doesnt depend on Import */
+/** Seeds a DAO with demo trips so GUI dev isn't blocked on file imports */
 public final class SampleData {
     private static final String[] IMAGES = {"sample1.jpg", "sample2.jpg", "sample3.jpg"};
     private static int photoCounter = 0;
