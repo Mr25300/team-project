@@ -76,6 +76,7 @@ public class TripListView extends JPanel implements ActivatableView, PropertyCha
 
     private void showMessage(String text) {
         messageLabel.setText(text);
+        messageLabel.setVisible(true);
     }
 
     // Package-private accessors for tests.
