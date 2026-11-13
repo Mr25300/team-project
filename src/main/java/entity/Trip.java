@@ -54,6 +54,10 @@ public class Trip {
         return Duration.between(startTime, endTime);
     }
 
+    public String getId() {
+        return this.id;
+    }
+
     public List<String> getPhotoIds() {
         return List.copyOf(this.photoIds);
     }
