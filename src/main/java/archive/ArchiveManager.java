@@ -2,8 +2,11 @@ package archive;
 
 import java.nio.file.Path;
 
+import entity.Photo;
+
 public class ArchiveManager implements ArchiveManagerInterface {
-    private static String FOLDER_NAME = "journeye";
+    private static final String FOLDER_NAME = "journeye";
+    private static final String PHOTOS_FOLDER_NAME = "photos";
 
     private Path directory;
 
@@ -43,6 +46,10 @@ public class ArchiveManager implements ArchiveManagerInterface {
 
     public Path getDirectory() {
         return directory;
+    }
+
+    public Path getPhotoPath(Photo photo) {
+        return directory.resolve(PHOTOS_FOLDER_NAME).resolve(photo.getId());
     }
 
     public void setDirectory(Path newDirectory) {
