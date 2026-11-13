@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,7 +27,9 @@ public class NavigationBar extends JPanel implements PropertyChangeListener {
     public NavigationBar(ViewManagerModel viewManagerModel) {
         this.viewManagerModel = viewManagerModel;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 0, 1, java.awt.Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(12, 8, 12, 8)));
         viewManagerModel.addPropertyChangeListener(this);
     }
 
@@ -39,7 +42,7 @@ public class NavigationBar extends JPanel implements PropertyChangeListener {
     }
 
     /** Package-pricate: lets tests click buttons without searching the component tree */
-    JToggleButton getnavButton(String viewName) {
+    JToggleButton getNavButton(String viewName) {
         return navButtons.get(viewName);
     }
 
