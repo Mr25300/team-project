@@ -22,6 +22,7 @@ import com.drew.metadata.exif.GpsDirectory;
 import archive.ArchiveManagerInterface;
 import entity.Photo;
 import entity.Location;
+import exception.PhotoImportException;
 
 public class PhotoImporter implements PhotoImporterInterface {
     private static final List<String> SUPPORTED_TYPES = List.of(
@@ -86,11 +87,11 @@ public class PhotoImporter implements PhotoImporterInterface {
             return new Photo(UUID.randomUUID().toString(), location, time);
 
         } catch (Exception e) {
-            return null; 
+            return null;
         }
     }
 
-    private void writeImage(Photo photo, Path imagePath) {
+    private boolean writeImage(Photo photo, Path imagePath) {
         try {
             Path archiveDir = archiveManager.getDirectory();
             Path photosDir = archiveDir.resolve("photos");
@@ -109,8 +110,10 @@ public class PhotoImporter implements PhotoImporterInterface {
             Files.createDirectories(photosDir);
             Files.copy(imagePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
+            return true;
+
         } catch (IOException e) {
-            throw new PhotoHandlerException("Failed to copy image to archive", e);
+            return false;
         }
     }
 
@@ -126,7 +129,7 @@ public class PhotoImporter implements PhotoImporterInterface {
                 });
 
         } catch (IOException e) {
-            throw new PhotoHandlerException("Failed to stream photos from directory", e);
+            throw new PhotoImportException(sourceDirectory, e.getMessage(), e);
         }
     }
 }
