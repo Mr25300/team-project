@@ -5,7 +5,6 @@ import java.awt.Frame;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JSeparator;
 import javax.swing.border.Border;
 
 import data_access.InMemoryTripDataAcessObject;
@@ -57,7 +56,6 @@ public class AppBuilder {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.add(navigationBar, BorderLayout.WEST);
-        frame.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
         frame.add(viewManager.getCardPanel(), BorderLayout.CENTER);
         frame.setSize(1100, 720);
         frame.setLocationRelativeTo(null);
