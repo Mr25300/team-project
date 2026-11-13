@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -24,7 +23,7 @@ import archive.ArchiveManagerInterface;
 import entity.Photo;
 import entity.Location;
 
-public class PhotoHandler implements PhotoHandlerInterface {
+public class PhotoImporter implements PhotoImporterInterface {
     private static final List<String> SUPPORTED_TYPES = List.of(
         "jpg", "png"
     );
@@ -38,7 +37,7 @@ public class PhotoHandler implements PhotoHandlerInterface {
 
     private ArchiveManagerInterface archiveManager;
 
-    public PhotoHandler(ArchiveManagerInterface archiveManager) {
+    public PhotoImporter(ArchiveManagerInterface archiveManager) {
         this.archiveManager = archiveManager;
     }
 
@@ -117,7 +116,7 @@ public class PhotoHandler implements PhotoHandlerInterface {
 
     public void importImages(Path sourceDirectory, Consumer<Photo> onPhotoProcessed) {
         try (Stream<Path> pathStream = Files.walk(sourceDirectory)) {
-            pathStream.filter(PhotoHandler::isSupportedImage)
+            pathStream.filter(PhotoImporter::isSupportedImage)
                 .forEach(path -> {
                     Photo photo = getImageMetadata(path.toFile());
 
@@ -129,9 +128,5 @@ public class PhotoHandler implements PhotoHandlerInterface {
         } catch (IOException e) {
             throw new PhotoHandlerException("Failed to stream photos from directory", e);
         }
-    }
-
-    public BufferedImage loadFullImage(String photoId) {
-        throw new PhotoHandlerException("Not implemented");
     }
 }
