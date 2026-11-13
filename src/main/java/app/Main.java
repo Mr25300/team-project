@@ -8,6 +8,7 @@ public class Main {
                 .addTripListView()
                 .addMapView()
                 .addDashBoardView()
+                .addListTripsUseCase()
                 .build()
                 .setVisible(true));
     }
