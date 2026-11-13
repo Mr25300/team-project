@@ -11,9 +11,17 @@ import data_access.InMemoryTripDataAcessObject;
 import data_access.SampleData;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.ViewNames;
+import interface_adapter.list_trips.ListTripsController;
+import interface_adapter.list_trips.ListTripsPresenter;
+import interface_adapter.list_trips.TripListViewModel;
+import use_case.list_trips.ListTripsInputBoundary;
+import use_case.list_trips.ListTripsInteractor;
+import use_case.list_trips.ListTripsOutputBoundary;
 import view.NavigationBar;
 import view.PlaceholderView;
+import view.TripListView;
 import view.ViewManager;
+import view.components.ThumbnailCache;
 
 /**
  * Composition Root. Only place that creates concrete classes and connects them.
@@ -27,6 +35,10 @@ public class AppBuilder {
 
     // Single swap point for storage. (Replace this with file stuff later)
     private final InMemoryTripDataAcessObject tripDao = new InMemoryTripDataAcessObject();
+    private final ThumbnailCache thumbnailCache = new ThumbnailCache(96, 300);
+
+    private TripListViewModel tripListViewModel;
+    private TripListView tripListView;
 
 
     public AppBuilder() {
@@ -34,7 +46,16 @@ public class AppBuilder {
     }
 
     public AppBuilder addTripListView() {
-        return addScreen("Trips", ViewNames.TRIPS, new PlaceholderView("Trips"));
+        tripListViewModel = new TripListViewModel();
+        tripListView = new TripListView(tripListViewModel, thumbnailCache);
+        return addScreen("Trips", ViewNames.TRIPS, tripListView);
+    }
+
+    public AppBuilder addListTripsUseCase() {
+        ListTripsOutputBoundary presenter = new ListTripsPresenter(tripListViewModel);
+        ListTripsInputBoundary interactor = new ListTripsInteractor(tripDao, presenter);
+        tripListView.setListTripsController(new ListTripsController(interactor));
+        return this;
     }
 
     public AppBuilder addMapView() {
