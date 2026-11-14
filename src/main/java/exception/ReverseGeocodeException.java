@@ -1,8 +1,8 @@
-package location;
+package exception;
 
 import java.lang.RuntimeException;
 
-public class LocationServiceException extends RuntimeException {
+public class ReverseGeocodeException extends RuntimeException {
     public LocationServiceException(String message) {
         super(message);
     }
