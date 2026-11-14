@@ -1,5 +1,6 @@
 package photo;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
@@ -30,16 +31,40 @@ public class PhotoResolver {
         this.archiveManager = archiveManager;
     }
 
-    public static Optional<ImageType> getTypeFromExtension(String extension) {
-        return Optional.ofNullable(EXTENSION_TO_TYPE_MAP.get(extension.toLowerCase()));
-    }
-
-    public static String getExtensionFromType(ImageType type) {
+    private static String getImageTypeExtension(ImageType type) {
         return TYPE_TO_EXTENSION_MAP.get(type);
     }
 
+    public static boolean isSupportedType(String extension) {
+        return EXTENSION_TO_TYPE_MAP.containsKey(extension.toLowerCase());
+    }
+
+    public static Optional<ImageType> getImageType(String extension) {
+        return Optional.ofNullable(EXTENSION_TO_TYPE_MAP.get(extension.toLowerCase()));
+    }
+
+    public static boolean isSupportedType(Path filePath) {
+        return isSupportedType(getExtension(filePath));
+    }
+
+    public static Optional<ImageType> getImageType(Path filePath) {
+        return getImageType(getExtension(filePath));
+    }
+
+    private static String getExtension(Path filePath) {
+        String fileName = filePath.getFileName().toString();
+        String extension = "";
+        int dotIndex = fileName.lastIndexOf('.');
+
+        if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+            extension = fileName.substring(dotIndex + 1);
+        }
+
+        return extension;
+    }
+
     public Path getPhotoPath(Photo photo) {
-        String fileName = photo.getId() + '.' + getExtensionFromType(photo.getType());
+        String fileName = photo.getId() + '.' + getImageTypeExtension(photo.getType());
 
         return archiveManager.getDirectory()
             .resolve(PHOTOS_FOLDER_NAME)
