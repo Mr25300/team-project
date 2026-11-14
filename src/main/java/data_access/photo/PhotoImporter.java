@@ -1,4 +1,4 @@
-package photo;
+package data_access.photo;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import entity.Photo;
 import entity.ImageType;
 import entity.Location;
 import exception.PhotoImportException;
-import usecase.PhotoImporterInterface;
+import use_case.PhotoImporterInterface;
 
 public class PhotoImporter implements PhotoImporterInterface {
     private static final List<DateTimeFormatter> FORMATTERS = List.of(

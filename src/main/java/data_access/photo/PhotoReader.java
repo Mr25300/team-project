@@ -1,4 +1,4 @@
-package photo;
+package data_access.photo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 import entity.Photo;
 import exception.PhotoUnavailableException;
-import usecase.PhotoReaderInterface;
+import use_case.PhotoReaderInterface;
 
 public class PhotoReader implements PhotoReaderInterface {
     private final PhotoResolver resolver;

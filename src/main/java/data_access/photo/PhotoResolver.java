@@ -1,4 +1,4 @@
-package photo;
+package data_access.photo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
