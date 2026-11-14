@@ -3,7 +3,7 @@ package archive;
 import java.nio.file.Path;
 
 public class ArchiveManager implements ArchiveManagerInterface {
-    private static String FOLDER_NAME = "journeye";
+    private static final String FOLDER_NAME = "journeye";
 
     private Path directory;
 
