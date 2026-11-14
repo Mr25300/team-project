@@ -71,10 +71,7 @@ public class PhotoImporter implements PhotoImporterInterface {
                     try {
                         time = LocalDateTime.parse(dateTimeString, formatter);
                         break;
-
-                    } catch (DateTimeParseException e) {
-                        continue;
-                    }
+                    } catch (DateTimeParseException e) {}
                 }
             }
 
@@ -88,7 +85,7 @@ public class PhotoImporter implements PhotoImporterInterface {
         }
     }
 
-    private boolean writeImage(Photo photo, Path imagePath) {
+    private boolean saveImage(Photo photo, Path imagePath) {
         try {
             Path copyPath = resolver.getPhotoPath(photo);
 
@@ -127,7 +124,7 @@ public class PhotoImporter implements PhotoImporterInterface {
             Optional<Photo> photo = getPhotoFromPath(imagePath);
             if (photo.isEmpty()) continue;
 
-            boolean successful = writeImage(photo.get(), imagePath);
+            boolean successful = saveImage(photo.get(), imagePath);
 
             if (successful) {
                 onPhotoProcessed.accept(photo.get());
