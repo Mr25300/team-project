@@ -7,5 +7,5 @@ import java.util.function.Consumer;
 import entity.Photo;
 
 public interface PhotoImporterInterface {
-    void importImages(List<Path> directories, Consumer<Photo> onPhotoProcessed);
+    void importImages(List<Path> locations, Consumer<Photo> onPhotoProcessed);
 }
