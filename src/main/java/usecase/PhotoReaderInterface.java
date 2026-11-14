@@ -1,4 +1,4 @@
-package photo;
+package usecase;
 
 import java.io.InputStream;
 

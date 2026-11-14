@@ -1,4 +1,4 @@
-package photo;
+package usecase;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
