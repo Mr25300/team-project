@@ -1,5 +1,7 @@
 package app;
 
+import interface_adapter.map.MapController;
+import interface_adapter.map.MapViewModel;
 import java.awt.BorderLayout;
 import java.util.UUID;
 
@@ -39,6 +41,7 @@ import view.TripDetailsView;
 import view.ViewManager;
 import view.dashboard.DashboardView;
 import view.components.ThumbnailCache;
+import view.map.MapView;
 
 /**
  * Composition Root. Only place that creates concrete classes and connects them.
@@ -100,7 +103,9 @@ public class AppBuilder {
     }
 
     public AppBuilder addMapView() {
-        return addScreen("Map", ViewNames.MAP, new PlaceholderView("Map"));
+        MapViewModel viewModel = new MapViewModel("Map");
+        MapController controller = new MapController();
+        return addScreen("Map", ViewNames.MAP, new MapView(viewModel, controller));
     }
 
     public AppBuilder addDashBoardView() {
