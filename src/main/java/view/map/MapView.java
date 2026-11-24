@@ -33,7 +33,7 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         map.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map));
 
 
-        TileFactoryInfo info = new OSMTileFactoryInfo("OpenStreetMap", "https://tile.openstreetmap.org");
+        CleanTileFactoryInfo info = new CleanTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         map.setTileFactory(tileFactory);
 
