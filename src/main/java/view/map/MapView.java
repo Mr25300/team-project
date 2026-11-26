@@ -4,6 +4,11 @@ import interface_adapter.ViewModel;
 import interface_adapter.map.MapController;
 import interface_adapter.map.MapViewModel;
 import java.awt.BorderLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -25,6 +30,8 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
     private final JXMapViewer map = new JXMapViewer();
     private MapController controller;
 
+    private final WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+
     public MapView(MapViewModel viewModel, MapController controller){
         this.viewModel = viewModel;
         this.controller = controller;
@@ -34,9 +41,19 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         map.addMouseMotionListener(pan);
         map.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map));
 
+        map.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Waypoint hit = findWaypointAt(e.getPoint());
+                if (hit != null) {
+                    GeoPosition pos = hit.getPosition();
+                    System.out.println("Clicked waypoint: " + pos.getLatitude() + ", " + pos.getLongitude());
+                }
+            }
+        });
 
-        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
-        waypointPainter.setWaypoints(viewModel.getState().getWaypoints());
+
+        viewModel.addPropertyChangeListener(this);
         map.setOverlayPainter(waypointPainter);
 
         CleanTileFactoryInfo info = new CleanTileFactoryInfo();
@@ -53,7 +70,8 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        waypointPainter.setWaypoints(viewModel.getState().getWaypoints());
+        map.repaint();
     }
 
 
@@ -63,4 +81,27 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         render();
         controller.execute();
     }
+
+    private Waypoint findWaypointAt(Point click) {
+        Rectangle viewport = map.getViewportBounds();
+        int zoom = map.getZoom();
+        Waypoint closest = null;
+        double closestDist = Double.MAX_VALUE;
+
+        for (Waypoint wp : viewModel.getState().getWaypoints()) {
+            Point2D world = map.getTileFactory().geoToPixel(wp.getPosition(), zoom);
+            double screenX = world.getX() - viewport.getX();
+            double screenY = world.getY() - viewport.getY();
+
+            // The default marker is drawn above its coordinate, so aim at its middle
+            double dist = Math.hypot(click.x - screenX, click.y - (screenY - 16));
+            if (dist <= 16 && dist < closestDist) {
+                closest = wp;
+                closestDist = dist;
+            }
+        }
+        return closest;
+    }
+
+
 }
