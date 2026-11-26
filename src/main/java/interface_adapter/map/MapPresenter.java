@@ -25,5 +25,6 @@ public class MapPresenter implements MapOutputBoundary {
             System.out.println(waypoint.getPosition().toString());
         }
         viewModel.getState().setWaypoints(waypoints);
+        viewModel.firePropertyChanged();
     }
 }
