@@ -1,6 +1,8 @@
 package app;
 
+import interface_adapter.ViewModel;
 import interface_adapter.map.MapController;
+import interface_adapter.map.MapPresenter;
 import interface_adapter.map.MapViewModel;
 import java.awt.BorderLayout;
 import java.util.UUID;
@@ -34,6 +36,8 @@ import use_case.manipulate_trips.ManipulateTripsOutputBoundary;
 import use_case.load_photos.LoadPhotoInputBoundary;
 import use_case.load_photos.LoadPhotoInteractor;
 import use_case.load_photos.LoadPhotoOutputBoundary;
+import use_case.map.MapInputBoundary;
+import use_case.map.MapInteractor;
 import view.NavigationBar;
 import view.PlaceholderView;
 import view.TripListView;
@@ -103,8 +107,9 @@ public class AppBuilder {
     }
 
     public AppBuilder addMapView() {
-        MapViewModel viewModel = new MapViewModel("Map");
-        MapController controller = new MapController();
+        MapViewModel viewModel = new MapViewModel();
+        MapInputBoundary interactor = new MapInteractor(dataAccess, dataAccess, new MapPresenter(viewModel));
+        MapController controller = new MapController(interactor);
         return addScreen("Map", ViewNames.MAP, new MapView(viewModel, controller));
     }
 

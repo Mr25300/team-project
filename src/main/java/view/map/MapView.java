@@ -34,22 +34,11 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         map.addMouseMotionListener(pan);
         map.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map));
 
-        // 1. Define coordinates (Latitude, Longitude)
-        GeoPosition toronto = new GeoPosition(43.6532, -79.3832);
-        GeoPosition cnTower = new GeoPosition(43.6426, -79.3871);
 
-// 2. Create a set of waypoints
-        Set<Waypoint> waypoints = new HashSet<>(Arrays.asList(
-                new DefaultWaypoint(toronto),
-                new DefaultWaypoint(cnTower)
-        ));
-
-// 3. Configure the WaypointPainter
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
-        waypointPainter.setWaypoints(waypoints);
-
-// 4. Attach the painter to the map
+        waypointPainter.setWaypoints(viewModel.getState().getWaypoints());
         map.setOverlayPainter(waypointPainter);
+
         CleanTileFactoryInfo info = new CleanTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         map.setTileFactory(tileFactory);
@@ -72,5 +61,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
     @Override
     public void onActivated() {
         render();
+        controller.execute();
     }
 }

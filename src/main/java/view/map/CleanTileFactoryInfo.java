@@ -7,7 +7,7 @@ public class CleanTileFactoryInfo extends TileFactoryInfo {
             "https://tile.openstreetmap.org";
 
     public CleanTileFactoryInfo() {
-        super("Esri Light Gray", 3, 19, 19, 256, true, true, BASE_URL, "x", "y", "z");
+        super("Map", 3, 19, 19, 256, true, true, BASE_URL, "x", "y", "z");
     }
 
     @Override
