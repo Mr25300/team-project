@@ -1,22 +1,12 @@
 package interface_adapter.map;
 
-import entity.Location;
-
-import entity.Trip;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import use_case.map.LocationDetailsOutputData;
 import use_case.map.MapOutputBoundary;
-import use_case.map.MapOutputData;
-import view.map.waypoints.ColoredWaypoint;
+import use_case.map.output_data.MapOutputData;
 
 public class MapPresenter implements MapOutputBoundary {
-    public static final String ALL_TRIPS = "All";
 
     private final MapViewModel viewModel;
 
@@ -24,34 +14,19 @@ public class MapPresenter implements MapOutputBoundary {
         this.viewModel = viewModel;
     }
 
-    public void present(MapOutputData data) {
-        prepareMultipleTripWaypoints(data.getTripLocations());
-        prepareTripCatalog(data.getTripIds());
-        viewModel.firePropertyChanged();
+    @Override
+    public void presentMap(MapOutputData data) {
+
     }
 
+    @Override
+    public void presentLocationDetails(LocationDetailsOutputData data) {
 
-
-    private void prepareTripCatalog(List<String> trips){
-        List<String> tripCatalog = new ArrayList<>();
-        tripCatalog.add(ALL_TRIPS);
-        tripCatalog.addAll(trips);
-        viewModel.getState().setTripCatalog(tripCatalog);
     }
 
+    @Override
+    public void presentError(String message) {
 
-    private void prepareMultipleTripWaypoints(Map<Trip, Collection<Location>> tripLocations) {
-        Set<Trip> trips = tripLocations.keySet();
-        Set<ColoredWaypoint> waypoints = new HashSet<>();
-        for(Trip trip : trips){
-            Color color = colorFromTripId(trip.getId());
-            for (Location location : tripLocations.get(trip)){
-                ColoredWaypoint waypoint = new ColoredWaypoint(color, location.getLatitude(), location.getLongitude());
-                waypoints.add(waypoint);
-            }
-        }
-
-        viewModel.getState().setWaypoints(waypoints);
     }
 
     private Color colorFromTripId(String tripId){

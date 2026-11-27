@@ -1,17 +1,22 @@
 package use_case.map;
 
 import entity.Location;
-import entity.LocationInfo;
 import entity.Photo;
 import entity.Trip;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import use_case.PhotoAccessException;
 import use_case.PhotoAccessInterface;
+import use_case.TripAccessException;
 import use_case.TripAccessInterface;
+import use_case.map.input_data.FilterTripsInputData;
+import use_case.map.input_data.SelectWaypointInputData;
+import use_case.map.output_data.MapOutputData;
+import use_case.map.output_data.TripPoint;
+import use_case.map.output_data.TripSummary;
 
 public class MapInteractor implements MapInputBoundary{
 
@@ -27,12 +32,17 @@ public class MapInteractor implements MapInputBoundary{
     }
 
     @Override
-    public void updateWaypoints() {
-        presenter.present(new MapOutputData(tripDataAccess.getTrips().stream().map(Trip::getId).toList(), getAllTripLocations()));
+    public void loadMap() {
+        showTrips(Set.of());
     }
 
     @Override
-    public void selectTrip() {
+    public void filterTrips(FilterTripsInputData input) {
+        showTrips(input.tripIds());
+    }
+
+    @Override
+    public void selectWaypoint(SelectWaypointInputData input) {
 
     }
 
@@ -41,11 +51,33 @@ public class MapInteractor implements MapInputBoundary{
         return photos.stream().map(Photo::getLocation).toList();
     }
 
-    private Map<Trip, Collection<Location>> getAllTripLocations() {
-        HashMap<Trip,Collection<Location>> tripLocations = new HashMap<>();
-        for (Trip trip : tripDataAccess.getTrips()) {
-            tripLocations.put(trip,getLocationsFromTrip(trip));
+    private void showTrips(Set<String> selectedTripIds) {
+        try {
+            List<Trip> trips = tripDataAccess.getTrips();
+
+            List<TripSummary> summaries = trips.stream()
+                    .map(trip -> new TripSummary(trip.getId(), trip.getName()))
+                    .toList();
+
+            List<TripPoint> points = trips.stream()
+                    .filter(trip -> selectedTripIds.isEmpty() || selectedTripIds.contains(trip.getId()))
+                    .flatMap(trip -> pointsOf(trip).stream())
+                    .toList();
+
+            presenter.presentMap(new MapOutputData(summaries, points));
+        } catch (TripAccessException | PhotoAccessException e) {
+            presenter.presentError("Could not load the map: " + e.getMessage());
         }
-        return tripLocations;
+    }
+
+    private List<TripPoint> pointsOf(Trip trip) {
+        return photoDataAccess.getPhotosByTripId(trip.getId()).stream()
+                .filter(photo -> photo.getLocation() != null)
+                .map(photo -> new TripPoint(
+                        trip.getId(),
+                        photo.getId(),
+                        photo.getLocation().getLatitude(),
+                        photo.getLocation().getLongitude()))
+                .toList();
     }
 }

@@ -48,17 +48,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         map.addMouseMotionListener(pan);
         map.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map));
 
-        map.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Waypoint hit = findWaypointAt(e.getPoint());
-                if (hit != null) {
-                    GeoPosition pos = hit.getPosition();
-                    System.out.println("Clicked waypoint: " + pos.getLatitude() + ", " + pos.getLongitude());
-                }
-            }
-        });
-
         waypointPainter.setRenderer(new ColoredWaypointRenderer());
         viewModel.addPropertyChangeListener(this);
         map.setOverlayPainter(waypointPainter);
@@ -87,7 +76,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        waypointPainter.setWaypoints(viewModel.getState().getWaypoints());
         map.repaint();
 
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -99,26 +87,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
     public void onActivated() {
         controller.execute();
         map.setZoom(6);
-    }
-
-    private Waypoint findWaypointAt(Point click) {
-        Rectangle viewport = map.getViewportBounds();
-        int zoom = map.getZoom();
-        Waypoint closest = null;
-        double closestDist = Double.MAX_VALUE;
-
-        for (Waypoint wp : viewModel.getState().getWaypoints()) {
-            Point2D world = map.getTileFactory().geoToPixel(wp.getPosition(), zoom);
-            double screenX = world.getX() - viewport.getX();
-            double screenY = world.getY() - viewport.getY();
-
-            double dist = Math.hypot(click.x - screenX, click.y - (screenY - 16));
-            if (dist <= 16 && dist < closestDist) {
-                closest = wp;
-                closestDist = dist;
-            }
-        }
-        return closest;
     }
 
 

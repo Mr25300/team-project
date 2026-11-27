@@ -1,31 +1,53 @@
 package interface_adapter.map;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import org.jxmapviewer.viewer.Waypoint;
-import view.map.waypoints.ColoredWaypoint;
 
 public class MapState {
 
-    private Set<ColoredWaypoint> waypoints = new HashSet<>();
-    private List<String> tripCatalog = new ArrayList<>();
+    private List<WaypointData> waypoints;
+    private List<TripOption> tripOptions;
+    private List<String> selectedTripIds;
+    private SelectedLocation selectedLocation;
+    private String errorMessage;
 
-
-    public Set<ColoredWaypoint> getWaypoints() {
+    public List<WaypointData> getWaypoints(){
         return waypoints;
     }
-    public void setWaypoints(Set<ColoredWaypoint> waypoints) {
+
+    public void setWaypoints(List<WaypointData> waypoints) {
         this.waypoints = waypoints;
     }
 
-    public List<String> getTripCatalog(){
-        return tripCatalog;
-    }
-    public void setTripCatalog(List<String> tripCatalog){
-        this.tripCatalog = tripCatalog;
+    public List<TripOption> getTripOptions() {
+        return tripOptions;
     }
 
+    public void setTripOptions(List<TripOption> tripOptions) {
+        this.tripOptions = tripOptions;
+    }
+
+    public List<String> getSelectedTripIds() {
+        return selectedTripIds;
+    }
+
+    public void setSelectedTripIds(List<String> selectedTripIds) {
+        this.selectedTripIds = selectedTripIds;
+    }
+
+    public SelectedLocation getSelectedLocation() {
+        return selectedLocation;
+    }
+
+    public void setSelectedLocation(SelectedLocation selectedLocation) {
+        this.selectedLocation = selectedLocation;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }
