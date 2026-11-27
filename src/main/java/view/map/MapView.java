@@ -23,6 +23,8 @@ import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.*;
 import view.ActivatableView;
+import view.map.waypoints.ColoredWaypoint;
+import view.map.waypoints.ColoredWaypointRenderer;
 
 public class MapView extends JPanel implements ActivatableView, PropertyChangeListener {
 
@@ -30,7 +32,7 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
     private final JXMapViewer map = new JXMapViewer();
     private MapController controller;
 
-    private final WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+    private final WaypointPainter<ColoredWaypoint> waypointPainter = new WaypointPainter<>();
 
     public MapView(MapViewModel viewModel, MapController controller){
         this.viewModel = viewModel;
@@ -52,7 +54,7 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
             }
         });
 
-
+        waypointPainter.setRenderer(new ColoredWaypointRenderer());
         viewModel.addPropertyChangeListener(this);
         map.setOverlayPainter(waypointPainter);
 
