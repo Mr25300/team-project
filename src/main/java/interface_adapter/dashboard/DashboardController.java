@@ -21,13 +21,10 @@ public class DashboardController {
 
     public void requestAnalytics(AnalyticsType analyticsType) {
         switch (analyticsType) {
-            case MOST_VISITED: requestMostVisitedAnalytics(Optional.empty());
-            break;
-            case PHOTO_ACTIVITY: requestPhotoActivityAnalytics(Optional.empty());
-            break;
-            default: analyticsUseCase.execute(new DashboardInputDataCatalog.GenericInputData(analyticsType));
+            case MOST_VISITED -> requestMostVisitedAnalytics(Optional.empty());
+            case PHOTO_ACTIVITY -> requestPhotoActivityAnalytics(Optional.empty());
+            default -> analyticsUseCase.execute(new DashboardInputDataCatalog.GenericInputData(analyticsType));
         }
-
     }
     public void requestMostVisitedAnalytics(Optional<LocationInfoType> locationInfoType) {
         analyticsUseCase.execute(new DashboardInputDataCatalog.MostVisitedInputData(locationInfoType));

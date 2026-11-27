@@ -1,6 +1,5 @@
 package view.dashboard;
 
-import interface_adapter.dashboard.DashboardItemState;
 import interface_adapter.dashboard.DashboardStateCatalog;
 
 import javax.swing.*;

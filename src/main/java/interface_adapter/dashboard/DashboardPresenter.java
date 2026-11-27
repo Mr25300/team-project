@@ -29,7 +29,12 @@ public class DashboardPresenter implements DashboardOutputBoundary {
         }
     }
     public void prepareFailureView(String msg) {
-        // TODO
+        DashboardState state = new DashboardState();
+        state.addItemState(new DashboardStateCatalog.MessageState(
+                msg, 22f
+        ));
+        dashboardViewModel.setState(state);
+        dashboardViewModel.firePropertyChanged();
     }
 
     private void mostVisited(DashboardOutputData data) {
@@ -99,11 +104,10 @@ public class DashboardPresenter implements DashboardOutputBoundary {
     }
 
     private int dateToIndex(LocalDateTime date, AnalyticsOptions.TimeGrouping timeGrouping, LocalDateTime start) {
-        switch (timeGrouping) {
-            case YEAR: return Math.toIntExact(ChronoUnit.YEARS.between(Year.from(start), Year.from(date)));
-            case MONTH: return Math.toIntExact(ChronoUnit.MONTHS.between(YearMonth.from(start), YearMonth.from(date)));
-            default: throw new IllegalArgumentException("Unsupported Time Grouping.");
-        }
+        return switch (timeGrouping) {
+            case YEAR -> Math.toIntExact(ChronoUnit.YEARS.between(Year.from(start), Year.from(date)));
+            case MONTH -> Math.toIntExact(ChronoUnit.MONTHS.between(YearMonth.from(start), YearMonth.from(date)));
+        };
     }
 
     private DashboardState buildMostVisitedState(String typeOfPlace, List<List<String>> renderedEntries) {

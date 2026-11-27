@@ -34,10 +34,8 @@ public class AnalyticsUseCase implements DashboardInputBoundary {
         AnalyticsType analyticsType = dashboardInputData.getAnalyticsType();
         try {
             switch (analyticsType) {
-                case MOST_VISITED: mostVisited(dashboardInputData);
-                break;
-                case PHOTO_ACTIVITY: photoActivity(dashboardInputData);
-                break;
+                case MOST_VISITED -> mostVisited(dashboardInputData);
+                case PHOTO_ACTIVITY -> photoActivity(dashboardInputData);
             }
         } catch (PhotoAccessException | TripAccessException e) {
             presenter.prepareFailureView("Access to Photos or Trips Failed:\n" + e.getMessage());
@@ -52,7 +50,12 @@ public class AnalyticsUseCase implements DashboardInputBoundary {
         Optional<LocationInfoType> locationInfoType = ((DashboardInputDataCatalog.MostVisitedInputData)dashboardInputData).locationInfoType();
         DashboardOutputData data = new DashboardOutputData(AnalyticsType.MOST_VISITED);
         LocationInfoType locationType = locationInfoType.orElse(LocationInfoType.COUNTRY); // default location type
-        data.addDashboardItem(computeMostVisited(locationType));
+        DashboardOutputDataCatalog.MostVisited mostVisited = computeMostVisited(locationType);
+        if (mostVisited.placeVisits().isEmpty()) {
+           presenter.prepareFailureView("You haven't imported any trips :)");
+           return;
+        }
+        data.addDashboardItem(mostVisited);
         presenter.prepareSuccessView(data);
     }
 
@@ -66,23 +69,26 @@ public class AnalyticsUseCase implements DashboardInputBoundary {
                                 photo -> smoothenDate(photo.getTime(), grouping),
                                 Collectors.summingInt(photo -> 1))
                 );
-        DashboardItem item = (DashboardItem) (new DashboardOutputDataCatalog.PhotoActivity(grouping, dateToCount));
+        if (dateToCount.isEmpty()) {
+            presenter.prepareFailureView("You haven't taken any photos :)");
+            return;
+        }
+        DashboardItem item = new DashboardOutputDataCatalog.PhotoActivity(grouping, dateToCount);
         DashboardOutputData data = new DashboardOutputData(AnalyticsType.PHOTO_ACTIVITY);
         data.addDashboardItem(item);
         presenter.prepareSuccessView(data);
     }
 
     private LocalDateTime smoothenDate(LocalDateTime localDateTime, AnalyticsOptions.TimeGrouping grouping) {
-        switch (grouping) {
-            case MONTH: return YearMonth.from(localDateTime)
+        return switch (grouping) {
+            case MONTH -> YearMonth.from(localDateTime)
                     .atDay(1)
                     .atStartOfDay();
-            case YEAR: return Year.from(localDateTime)
+            case YEAR -> Year.from(localDateTime)
                     .atMonth(1)
                     .atDay(1)
                     .atStartOfDay();
-            default: throw new IllegalArgumentException("Unknown grouping: " + grouping);
-        }
+        };
     }
 
     private DashboardOutputDataCatalog.MostVisited computeMostVisited(LocationInfoType locationInfoType) {

@@ -61,7 +61,7 @@ public class DashboardView extends JPanel implements PropertyChangeListener {
     private void initOptionPanel() {
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
         JLabel prompt = new JLabel("What kind of analytics do you want to view?");
-        prompt.setFont(prompt.getFont().deriveFont(Font.BOLD, 30f));
+        prompt.setFont(prompt.getFont().deriveFont(Font.BOLD, 23f));
         JComboBox<String> dropdown = new JComboBox<>(TYPES.keySet().toArray(new String[0]));
         JButton button = new JButton("Generate Analytics");
         button.addActionListener(e -> {

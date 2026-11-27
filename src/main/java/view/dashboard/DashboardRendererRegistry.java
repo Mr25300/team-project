@@ -24,6 +24,7 @@ public class DashboardRendererRegistry {
         register(DashboardStateCatalog.DropdownState.class, new DropdownRenderer(dashboardController));
         register(DashboardStateCatalog.LinePlotState.class, new LinePlotRenderer());
         register(DashboardStateCatalog.HeadingState.class, new HeadingRenderer());
+        register(DashboardStateCatalog.MessageState.class, new MessageRenderer());
     }
     private <T extends DashboardItemState> void register(Class<T> type, DashboardRenderer<? extends DashboardItemState> dashboardRenderer) {
         dashboardRenderers.put(type, dashboardRenderer);

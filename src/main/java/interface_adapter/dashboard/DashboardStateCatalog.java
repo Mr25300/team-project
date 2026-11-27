@@ -36,4 +36,9 @@ public class DashboardStateCatalog {
             String text,
             float size
     ) implements DashboardItemState {}
+
+    public record MessageState(
+            String text,
+            float size
+    ) implements DashboardItemState {}
 }
