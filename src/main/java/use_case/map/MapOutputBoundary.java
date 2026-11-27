@@ -7,6 +7,5 @@ import java.util.Collection;
 import java.util.Map;
 
 public interface MapOutputBoundary {
-    void prepareWaypoints(Collection<Location> locations);
-    void prepareMultipleTripWaypoints(Map<Trip,Collection<Location>> tripLocations);
+    void present(MapOutputData data);
 }

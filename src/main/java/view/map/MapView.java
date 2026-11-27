@@ -4,6 +4,7 @@ import interface_adapter.ViewModel;
 import interface_adapter.map.MapController;
 import interface_adapter.map.MapViewModel;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -15,6 +16,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.JXMapViewer;
@@ -33,6 +37,7 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
     private MapController controller;
 
     private final WaypointPainter<ColoredWaypoint> waypointPainter = new WaypointPainter<>();
+    private final JComboBox<String> filterDropdown = new JComboBox<>();
 
     public MapView(MapViewModel viewModel, MapController controller){
         this.viewModel = viewModel;
@@ -62,26 +67,38 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         map.setTileFactory(tileFactory);
 
-        setLayout(new BorderLayout());
-        add(map, BorderLayout.CENTER);
-    }
+        filterDropdown.addActionListener(e -> {
+            String selected = (String) filterDropdown.getSelectedItem();
+            System.out.println("Dropdown selected: " + selected);
+        });
 
-    private void render(){
-        map.setZoom(6);
+        String[] items = viewModel.getState().getTripCatalog().toArray(new String[0]);
+        filterDropdown.setModel(new DefaultComboBoxModel<>(items));
+
+        JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topBar.add(new JLabel("Display Trips:"));
+        topBar.add(filterDropdown);
+
+
+        setLayout(new BorderLayout());
+        add(topBar, BorderLayout.NORTH);
+        add(map, BorderLayout.CENTER);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         waypointPainter.setWaypoints(viewModel.getState().getWaypoints());
         map.repaint();
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        viewModel.getState().getTripCatalog().forEach(model::addElement);   // includes "All" already
+        filterDropdown.setModel(model);
     }
-
-
 
     @Override
     public void onActivated() {
-        render();
         controller.execute();
+        map.setZoom(6);
     }
 
     private Waypoint findWaypointAt(Point click) {
@@ -95,7 +112,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
             double screenX = world.getX() - viewport.getX();
             double screenY = world.getY() - viewport.getY();
 
-            // The default marker is drawn above its coordinate, so aim at its middle
             double dist = Math.hypot(click.x - screenX, click.y - (screenY - 16));
             if (dist <= 16 && dist < closestDist) {
                 closest = wp;

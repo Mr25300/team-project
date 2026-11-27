@@ -28,7 +28,12 @@ public class MapInteractor implements MapInputBoundary{
 
     @Override
     public void updateWaypoints() {
-        presenter.prepareMultipleTripWaypoints(getAllTripLocations());
+        presenter.present(new MapOutputData(tripDataAccess.getTrips().stream().map(Trip::getId).toList(), getAllTripLocations()));
+    }
+
+    @Override
+    public void selectTrip() {
+
     }
 
     private Collection<Location> getLocationsFromTrip(Trip trip) {
@@ -42,13 +47,5 @@ public class MapInteractor implements MapInputBoundary{
             tripLocations.put(trip,getLocationsFromTrip(trip));
         }
         return tripLocations;
-    }
-
-    private Photo getPhotoFromLocation(Location location) {
-        return null;
-    }
-
-    private LocationInfo getLocationInfo(Location location) {
-        return null;
     }
 }

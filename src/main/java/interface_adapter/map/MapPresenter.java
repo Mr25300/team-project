@@ -3,20 +3,20 @@ package interface_adapter.map;
 import entity.Location;
 
 import entity.Trip;
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jxmapviewer.viewer.DefaultWaypoint;
-import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.viewer.Waypoint;
 import use_case.map.MapOutputBoundary;
+import use_case.map.MapOutputData;
 import view.map.waypoints.ColoredWaypoint;
 
 public class MapPresenter implements MapOutputBoundary {
+    public static final String ALL_TRIPS = "All";
 
     private final MapViewModel viewModel;
 
@@ -24,13 +24,23 @@ public class MapPresenter implements MapOutputBoundary {
         this.viewModel = viewModel;
     }
 
-    @Override
-    public void prepareWaypoints(Collection<Location> locations) {
-
+    public void present(MapOutputData data) {
+        prepareMultipleTripWaypoints(data.getTripLocations());
+        prepareTripCatalog(data.getTripIds());
+        viewModel.firePropertyChanged();
     }
 
-    @Override
-    public void prepareMultipleTripWaypoints(Map<Trip, Collection<Location>> tripLocations) {
+
+
+    private void prepareTripCatalog(List<String> trips){
+        List<String> tripCatalog = new ArrayList<>();
+        tripCatalog.add(ALL_TRIPS);
+        tripCatalog.addAll(trips);
+        viewModel.getState().setTripCatalog(tripCatalog);
+    }
+
+
+    private void prepareMultipleTripWaypoints(Map<Trip, Collection<Location>> tripLocations) {
         Set<Trip> trips = tripLocations.keySet();
         Set<ColoredWaypoint> waypoints = new HashSet<>();
         for(Trip trip : trips){
@@ -42,7 +52,6 @@ public class MapPresenter implements MapOutputBoundary {
         }
 
         viewModel.getState().setWaypoints(waypoints);
-        viewModel.firePropertyChanged();
     }
 
     private Color colorFromTripId(String tripId){
