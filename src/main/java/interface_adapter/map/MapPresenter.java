@@ -2,10 +2,14 @@ package interface_adapter.map;
 
 import entity.Location;
 
+import entity.Trip;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
+import java.util.Map;
+import java.util.Set;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.Waypoint;
@@ -21,18 +25,34 @@ public class MapPresenter implements MapOutputBoundary {
     }
 
     @Override
-    public void prepareWaypoints(ArrayList<Location> locations) {
-        HashSet<ColoredWaypoint> waypoints = new HashSet<>();
+    public void prepareWaypoints(Collection<Location> locations) {
 
-        for (Location location : locations) {
-            ColoredWaypoint waypoint = new ColoredWaypoint(new Color((int)(Math.random() * 255),
-                    (int)(Math.random() * 255),
-                    (int)(Math.random() * 255)),
-                    new GeoPosition(location.getLatitude(),location.getLongitude()));
-            waypoints.add(waypoint);
-            System.out.println(waypoint.getPosition().toString());
+    }
+
+    @Override
+    public void prepareMultipleTripWaypoints(Map<Trip, Collection<Location>> tripLocations) {
+        Set<Trip> trips = tripLocations.keySet();
+        Set<ColoredWaypoint> waypoints = new HashSet<>();
+        for(Trip trip : trips){
+            Color color = colorFromTripId(trip.getId());
+            for (Location location : tripLocations.get(trip)){
+                ColoredWaypoint waypoint = new ColoredWaypoint(color, location.getLatitude(), location.getLongitude());
+                waypoints.add(waypoint);
+            }
         }
+
         viewModel.getState().setWaypoints(waypoints);
         viewModel.firePropertyChanged();
+    }
+
+    private Color colorFromTripId(String tripId){
+        int hash = tripId.hashCode();
+
+        float hue = Math.floorMod(hash,360) / 360.0f;
+        float saturation = 0.65f;
+        float brightness = 0.85f;
+
+        return Color.getHSBColor(hue,saturation,brightness);
+
     }
 }

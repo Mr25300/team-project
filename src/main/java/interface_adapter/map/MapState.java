@@ -1,18 +1,20 @@
 package interface_adapter.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import org.jxmapviewer.viewer.Waypoint;
 import view.map.waypoints.ColoredWaypoint;
 
 public class MapState {
 
-    private HashSet<ColoredWaypoint> waypoints = new HashSet<>();
+    private Set<ColoredWaypoint> waypoints = new HashSet<>();
 
-    public HashSet<ColoredWaypoint> getWaypoints() {
+    public Set<ColoredWaypoint> getWaypoints() {
         return waypoints;
     }
-    public void setWaypoints(HashSet<ColoredWaypoint> waypoints) {
+    public void setWaypoints(Set<ColoredWaypoint> waypoints) {
         this.waypoints = waypoints;
     }
 
