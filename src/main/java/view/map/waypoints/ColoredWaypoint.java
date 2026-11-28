@@ -7,13 +7,25 @@ import java.awt.*;
 
 public class ColoredWaypoint extends DefaultWaypoint {
     private final Color color;
+    private final String tripId;
+    private final String photoId;
 
-    public ColoredWaypoint(Color color, double latitude, double longitude){
+    public ColoredWaypoint(Color color, String tripId, String photoId, double latitude, double longitude){
         super(latitude, longitude);
         this.color = color;
+        this.tripId = tripId;
+        this.photoId = photoId;
     }
 
     public Color getColor() {
         return color;
+    }
+
+    public String getTripId() {
+        return tripId;
+    }
+
+    public String getPhotoId() {
+        return photoId;
     }
 }

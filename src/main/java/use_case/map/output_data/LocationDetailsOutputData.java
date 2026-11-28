@@ -1,4 +1,11 @@
 package use_case.map.output_data;
 
-public class LocationDetailsOutputData {
-}
+import java.time.LocalDateTime;
+
+public record LocationDetailsOutputData(
+        String photoId,
+        String tripName,
+        double latitude,
+        double longitude,
+        String placeName,
+        LocalDateTime time){}

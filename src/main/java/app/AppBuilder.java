@@ -110,7 +110,7 @@ public class AppBuilder {
         MapViewModel viewModel = new MapViewModel();
         MapInputBoundary interactor = new MapInteractor(dataAccess, dataAccess, new MapPresenter(viewModel));
         MapController controller = new MapController(interactor);
-        return addScreen("Map", ViewNames.MAP, new MapView(viewModel, controller));
+        return addScreen("Map", ViewNames.MAP, new MapView(viewModel, controller, thumbnailCache));
     }
 
     public AppBuilder addDashBoardView() {

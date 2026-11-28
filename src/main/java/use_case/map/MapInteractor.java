@@ -6,12 +6,14 @@ import entity.Trip;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import javax.management.timer.TimerNotification;
 import use_case.PhotoAccessException;
 import use_case.PhotoAccessInterface;
 import use_case.TripAccessException;
 import use_case.TripAccessInterface;
 import use_case.map.input_data.SelectWaypointInputData;
 import use_case.map.input_data.SelectedTripInputData;
+import use_case.map.output_data.LocationDetailsOutputData;
 import use_case.map.output_data.MapOutputData;
 import use_case.map.output_data.TripPoint;
 import use_case.map.output_data.TripSummary;
@@ -41,6 +43,16 @@ public class MapInteractor implements MapInputBoundary{
 
     @Override
     public void selectWaypoint(SelectWaypointInputData input) {
+        Trip trip = tripDataAccess.getTripById(input.photoId());
+        Photo photo = photoDataAccess.getPhotoById(input.tripId());
+
+        presenter.presentLocationDetails(new LocationDetailsOutputData(input.photoId(),
+                trip.getName(),
+                photo.getLocation().getLatitude(),
+                photo.getLocation().getLongitude(),
+                photo.getLocation().getInfo().getCountry(),
+                photo.getTime()
+                ));
     }
 
     private Collection<Location> getLocationsFromTrip(Trip trip) {
@@ -83,6 +95,7 @@ public class MapInteractor implements MapInputBoundary{
             presenter.presentError("Could not load the map: " + e.getMessage());
         }
     }
+
     private List<TripPoint> pointsOf(Trip trip) {
         return photoDataAccess.getPhotosByTripId(trip.getId()).stream()
                 .filter(photo -> photo.getLocation() != null)

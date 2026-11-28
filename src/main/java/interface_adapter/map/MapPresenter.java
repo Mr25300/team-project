@@ -28,7 +28,17 @@ public class MapPresenter implements MapOutputBoundary {
 
     @Override
     public void presentLocationDetails(LocationDetailsOutputData data) {
+        SelectedLocation selectedLocation = new SelectedLocation(
+                data.tripName(),
+                data.latitude(),
+                data.longitude(),
+                data.photoId(),
+                data.placeName(),
+                data.time()
+        );
 
+        viewModel.getState().setSelectedLocation(selectedLocation);
+        viewModel.firePropertyChanged("selectedLocation");
     }
 
     @Override
