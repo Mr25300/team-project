@@ -2,9 +2,11 @@ package interface_adapter.map;
 
 import java.awt.Color;
 
-import use_case.map.LocationDetailsOutputData;
+import java.util.List;
+import use_case.map.output_data.LocationDetailsOutputData;
 import use_case.map.MapOutputBoundary;
 import use_case.map.output_data.MapOutputData;
+import use_case.map.output_data.TripPoint;
 
 public class MapPresenter implements MapOutputBoundary {
 
@@ -16,7 +18,9 @@ public class MapPresenter implements MapOutputBoundary {
 
     @Override
     public void presentMap(MapOutputData data) {
-
+        prepareWaypoints(data.getTripPoints());
+        viewModel.getState().setTripOptions(data.getSummaries().stream().map(tripSummary -> new TripOption(tripSummary.id(),tripSummary.name())).toList());
+        viewModel.firePropertyChanged();
     }
 
     @Override
@@ -27,6 +31,17 @@ public class MapPresenter implements MapOutputBoundary {
     @Override
     public void presentError(String message) {
 
+    }
+
+    private void prepareWaypoints(List<TripPoint> tripPoints){
+        List<WaypointData> waypoints = tripPoints.stream().map(tripPoint ->
+                new WaypointData( colorFromTripId(tripPoint.tripId()),
+                tripPoint.photoId(),
+                tripPoint.tripId(),
+                tripPoint.latitude(),
+                tripPoint.longitude())).toList();
+
+        viewModel.getState().setWaypoints(waypoints);
     }
 
     private Color colorFromTripId(String tripId){

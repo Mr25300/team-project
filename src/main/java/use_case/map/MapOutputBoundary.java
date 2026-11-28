@@ -1,5 +1,6 @@
 package use_case.map;
 
+import use_case.map.output_data.LocationDetailsOutputData;
 import use_case.map.output_data.MapOutputData;
 
 public interface MapOutputBoundary {

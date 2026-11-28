@@ -3,6 +3,7 @@ package view.map;
 import interface_adapter.ViewModel;
 import interface_adapter.map.MapController;
 import interface_adapter.map.MapViewModel;
+import interface_adapter.map.TripOption;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Point;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -61,9 +63,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
             System.out.println("Dropdown selected: " + selected);
         });
 
-        String[] items = viewModel.getState().getTripCatalog().toArray(new String[0]);
-        filterDropdown.setModel(new DefaultComboBoxModel<>(items));
-
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topBar.add(new JLabel("Display Trips:"));
         topBar.add(filterDropdown);
@@ -76,10 +75,15 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        map.repaint();
+        waypointPainter.setWaypoints(viewModel.getState().getWaypoints()
+                .stream()
+                .map(waypointData ->
+                        new ColoredWaypoint(waypointData.color(),
+                                waypointData.latitude(),
+                                waypointData.longitude())).collect(Collectors.toSet()));
 
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        viewModel.getState().getTripCatalog().forEach(model::addElement);   // includes "All" already
+        model.addAll(viewModel.getState().getTripOptions().stream().map(TripOption::name).toList());
         filterDropdown.setModel(model);
     }
 

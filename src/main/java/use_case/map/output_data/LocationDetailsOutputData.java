@@ -1,4 +1,4 @@
-package use_case.map;
+package use_case.map.output_data;
 
 public class LocationDetailsOutputData {
 }

@@ -4,16 +4,14 @@ import entity.Location;
 import entity.Photo;
 import entity.Trip;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import use_case.PhotoAccessException;
 import use_case.PhotoAccessInterface;
 import use_case.TripAccessException;
 import use_case.TripAccessInterface;
-import use_case.map.input_data.FilterTripsInputData;
 import use_case.map.input_data.SelectWaypointInputData;
+import use_case.map.input_data.SelectedTripInputData;
 import use_case.map.output_data.MapOutputData;
 import use_case.map.output_data.TripPoint;
 import use_case.map.output_data.TripSummary;
@@ -34,11 +32,6 @@ public class MapInteractor implements MapInputBoundary{
     @Override
     public void loadMap() {
         showTrips(Set.of());
-    }
-
-    @Override
-    public void filterTrips(FilterTripsInputData input) {
-        showTrips(input.tripIds());
     }
 
     @Override
