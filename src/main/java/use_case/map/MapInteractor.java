@@ -30,13 +30,17 @@ public class MapInteractor implements MapInputBoundary{
     }
 
     @Override
-    public void loadMap() {
-        showTrips(Set.of());
+    public void selectTrip(SelectedTripInputData input){
+        if (input.tripId() == null) {
+            showTrip(Set.of());
+        } else {
+            showTrip(Set.of(input.tripId()));
+
+        }
     }
 
     @Override
     public void selectWaypoint(SelectWaypointInputData input) {
-
     }
 
     private Collection<Location> getLocationsFromTrip(Trip trip) {
@@ -44,7 +48,7 @@ public class MapInteractor implements MapInputBoundary{
         return photos.stream().map(Photo::getLocation).toList();
     }
 
-    private void showTrips(Set<String> selectedTripIds) {
+    private void showTrip(Set<String> selectedTripIds) {
         try {
             List<Trip> trips = tripDataAccess.getTrips();
 

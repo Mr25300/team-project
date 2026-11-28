@@ -39,7 +39,7 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
     private MapController controller;
 
     private final WaypointPainter<ColoredWaypoint> waypointPainter = new WaypointPainter<>();
-    private final JComboBox<String> filterDropdown = new JComboBox<>();
+    private final JComboBox<TripOption> filterDropdown = new JComboBox<>();
 
     public MapView(MapViewModel viewModel, MapController controller){
         this.viewModel = viewModel;
@@ -59,9 +59,10 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         map.setTileFactory(tileFactory);
 
         filterDropdown.addActionListener(e -> {
-            String selected = (String) filterDropdown.getSelectedItem();
-            System.out.println("Dropdown selected: " + selected);
+            TripOption selected = (TripOption) filterDropdown.getSelectedItem();
+            controller.execute(selected.id());
         });
+
 
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topBar.add(new JLabel("Display Trips:"));
@@ -71,6 +72,9 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         setLayout(new BorderLayout());
         add(topBar, BorderLayout.NORTH);
         add(map, BorderLayout.CENTER);
+
+        map.setZoom(6);
+        controller.execute(null);
     }
 
     @Override
@@ -82,15 +86,16 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
                                 waypointData.latitude(),
                                 waypointData.longitude())).collect(Collectors.toSet()));
 
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        model.addAll(viewModel.getState().getTripOptions().stream().map(TripOption::name).toList());
+        DefaultComboBoxModel<TripOption> model = new DefaultComboBoxModel<>();
+        model.addAll(viewModel.getState().getTripOptions());
         filterDropdown.setModel(model);
+
+        map.repaint();
     }
 
     @Override
     public void onActivated() {
-        controller.execute();
-        map.setZoom(6);
+
     }
 
 
