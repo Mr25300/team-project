@@ -22,6 +22,7 @@ public class MapPresenter implements MapOutputBoundary {
     public void presentMap(MapOutputData data) {
         prepareWaypoints(data.getTripPoints());
         prepareTripSelection(data.getSummaries());
+        prepareSelectedTripOption(data.getSelectedTrip());
         viewModel.firePropertyChanged();
     }
 
@@ -52,6 +53,11 @@ public class MapPresenter implements MapOutputBoundary {
                 tripPoint.longitude())).toList();
 
         viewModel.getState().setWaypoints(waypoints);
+    }
+
+    private void prepareSelectedTripOption(TripSummary selectedTripSummary){
+        TripOption selectedTripOption = new TripOption(selectedTripSummary.id(),selectedTripSummary.name());
+        viewModel.getState().setSelectedTripOption(selectedTripOption);
     }
 
     private Color colorFromTripId(String tripId){

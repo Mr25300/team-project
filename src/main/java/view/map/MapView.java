@@ -58,6 +58,8 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         map.setTileFactory(tileFactory);
 
+        controller.execute(null);
+
         filterDropdown.addActionListener(e -> {
             TripOption selected = (TripOption) filterDropdown.getSelectedItem();
             controller.execute(selected.id());
@@ -74,7 +76,6 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         add(map, BorderLayout.CENTER);
 
         map.setZoom(6);
-        controller.execute(null);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class MapView extends JPanel implements ActivatableView, PropertyChangeLi
         DefaultComboBoxModel<TripOption> model = new DefaultComboBoxModel<>();
         model.addAll(viewModel.getState().getTripOptions());
         filterDropdown.setModel(model);
-
+        filterDropdown.setSelectedItem(viewModel.getState().getSelectedTripOption());
         map.repaint();
     }
 

@@ -1,13 +1,12 @@
 package interface_adapter.map;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapState {
 
     private List<WaypointData> waypoints;
     private List<TripOption> tripOptions;
-    private List<String> selectedTripIds;
+    private TripOption selectedTripOption;
     private SelectedLocation selectedLocation;
     private String errorMessage;
 
@@ -27,12 +26,12 @@ public class MapState {
         this.tripOptions = tripOptions;
     }
 
-    public List<String> getSelectedTripIds() {
-        return selectedTripIds;
+    public TripOption getSelectedTripOption() {
+        return selectedTripOption;
     }
 
-    public void setSelectedTripIds(List<String> selectedTripIds) {
-        this.selectedTripIds = selectedTripIds;
+    public void setSelectedTripOption(TripOption selectedTripOption) {
+        this.selectedTripOption = selectedTripOption;
     }
 
     public SelectedLocation getSelectedLocation() {

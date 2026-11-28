@@ -32,9 +32,9 @@ public class MapInteractor implements MapInputBoundary{
     @Override
     public void selectTrip(SelectedTripInputData input){
         if (input.tripId() == null) {
-            showTrip(Set.of());
+            showAllTrips();
         } else {
-            showTrip(Set.of(input.tripId()));
+            showTrip(input.tripId());
 
         }
     }
@@ -48,25 +48,41 @@ public class MapInteractor implements MapInputBoundary{
         return photos.stream().map(Photo::getLocation).toList();
     }
 
-    private void showTrip(Set<String> selectedTripIds) {
+    private void showTrip(String selectedTripId) {
         try {
+            Trip selectedTrip = tripDataAccess.getTripById(selectedTripId);
+
             List<Trip> trips = tripDataAccess.getTrips();
 
             List<TripSummary> summaries = trips.stream()
                     .map(trip -> new TripSummary(trip.getId(), trip.getName()))
                     .toList();
 
-            List<TripPoint> points = trips.stream()
-                    .filter(trip -> selectedTripIds.isEmpty() || selectedTripIds.contains(trip.getId()))
-                    .flatMap(trip -> pointsOf(trip).stream())
-                    .toList();
+            List<TripPoint> points = pointsOf(selectedTrip);
 
-            presenter.presentMap(new MapOutputData(summaries, points));
+            presenter.presentMap(new MapOutputData(summaries, points, new TripSummary(selectedTrip.getId(),selectedTrip.getName())));
         } catch (TripAccessException | PhotoAccessException e) {
             presenter.presentError("Could not load the map: " + e.getMessage());
         }
     }
 
+    private void showAllTrips() {
+        try {
+
+            List<Trip> trips = tripDataAccess.getTrips();
+
+            List<TripSummary> summaries = trips.stream()
+                    .map(trip -> new TripSummary(trip.getId(), trip.getName()))
+                    .toList();
+
+            List<TripPoint> points = trips.stream().flatMap(trip -> pointsOf(trip).stream())
+                    .toList();
+
+            presenter.presentMap(new MapOutputData(summaries, points, new TripSummary(null,"All")));
+        } catch (TripAccessException | PhotoAccessException e) {
+            presenter.presentError("Could not load the map: " + e.getMessage());
+        }
+    }
     private List<TripPoint> pointsOf(Trip trip) {
         return photoDataAccess.getPhotosByTripId(trip.getId()).stream()
                 .filter(photo -> photo.getLocation() != null)
